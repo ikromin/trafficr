@@ -1,0 +1,25 @@
+# Copyright 2016 Igor Kromin
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Forces a valid authenticated user to access the newframe.php script and
+# any of the frame images currently stored.
+# Use a htpasswd generator to create the .htpasswd file
+# http://www.htaccesstools.com/htpasswd-generator/
+
+<FilesMatch "newframe\.php|frame.*\.jpeg">
+AuthName "Authorised Access"
+AuthType Basic
+AuthUserFile /path/to/.htpasswd
+require valid-user
+</FilesMatch>

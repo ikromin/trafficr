@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Example Trafficr Website">
+	
+		<title>Example Trafficr Website</title>
+	
+		<style>
+			h1 {
+				text-align: center;
+			}
+		
+			footer {
+				margin-top: 2em;
+				text-align: center;
+			}
+		
+			#trafficr {
+				font-family: Verdana;
+				font-size: 8pt;
+				font-weight: bold;
+				display: inline-block;
+				position: relative;
+			}
+			
+			#trafficr_canvas {
+				background-color: #333;
+				max-width:100%;
+				height:auto;
+				box-shadow: 0px 0px 10px #000;
+				border-radius: 5px;
+			}
+			
+			#trafficr_status {
+				position: absolute;
+				left: 10px;
+				top: 10px;
+				color: white;
+				text-shadow: 0px 0px 4px black;
+			}
+			
+			#trafficr_wrapper {
+				text-align: center;
+			}
+		</style>
+		
+		<script src="trafficr.js"></script>
+	</head>
+	<body>
+		<h1>Trafficr</h1>
+		<div id="trafficr_wrapper">
+			<div id="trafficr">
+				<div id="trafficr_status"></div>
+				<canvas id="trafficr_canvas" width="640" height="480"></canvas>
+			</div>
+		</div>
+		<footer>Trafficr can be found on GitHub: <a href="https://github.com/ikromin/trafficr">https://github.com/ikromin/trafficr</a></footer>
+		
+		<script>
+		(function() {
+			Trafficr.loadFrames();
+		})();
+		</script>
+	</body>
+</html>
