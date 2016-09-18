@@ -43,7 +43,7 @@ checkCmd curl
 echo "Configuring webcam"
 v4l2-ctl -c backlight_compensation=1
 v4l2-ctl -c white_balance_temperature_auto=1
-v4l2-ctl -c exposure_auto=1
+v4l2-ctl -c exposure_auto=3
 
 # Make sure archive directory exists
 mkdir -p $ARCH_DIR
