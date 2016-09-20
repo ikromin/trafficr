@@ -22,7 +22,7 @@ var Trafficr = Trafficr || {
 	frameCanvas: null,
 	numFrames: -1,
 	frames: new Array(),
-	loadIndex: -1,
+	loadedFrames: 0,
 	cycleIndex: 0,
 
 	loadFrames: function() {
@@ -42,8 +42,10 @@ var Trafficr = Trafficr || {
 		Trafficr._appendStatus('Loading frames...');
 		
 		Trafficr._getNumFrames(function() {
-			Trafficr.loadIndex = -1;
-			Trafficr._loadNextFrame();
+			Trafficr.loadedFrames = 0;
+			for (i = 0; i < Trafficr.numFrames; i++) {
+				Trafficr._loadFrame(i);
+			}
 		});
 	},
 	
@@ -64,28 +66,27 @@ var Trafficr = Trafficr || {
 		setTimeout(Trafficr._cycleFrame, Trafficr.frameTimeout);
 	},
 	
-	_loadNextFrame: function() {
-		Trafficr.loadIndex++;
-	
-		if (Trafficr.loadIndex == Trafficr.numFrames) {
-			Trafficr._clearStatus();
-			Trafficr._appendStatus('All frames loaded');
+	_loadFrame: function(frameIndex) {
+		Trafficr._appendStatus('&rsaquo; ');
+		var frameNumber = frameIndex + 1;
+		Trafficr.frames[frameIndex] = new Image();
+		Trafficr.frames[frameIndex].onload = function() {
+			Trafficr.loadedFrames++;
+			if (Trafficr.loadedFrames == Trafficr.numFrames) {
+				Trafficr._clearStatus();
+				Trafficr._appendStatus('All frames loaded');
 			
-			Trafficr.frames.reverse();
-			Trafficr.cycleIndex = 0;
+				Trafficr.frames.reverse();
+				Trafficr.cycleIndex = 0;
 			
-			Trafficr._cycleFrame();
-			return;
-		}
-		else if (Trafficr.loadIndex < Trafficr.numFrames) {
-			var frameNumber = Trafficr.loadIndex + 1;
-			Trafficr._appendStatus(' ' + frameNumber);
-		
-			Trafficr.frames[Trafficr.loadIndex] = new Image();
-			Trafficr.frames[Trafficr.loadIndex].onload = Trafficr._loadNextFrame;
-			Trafficr.frames[Trafficr.loadIndex].onerror = Trafficr._frameError;
-			Trafficr.frames[Trafficr.loadIndex].src = 'frame.php?f=' + frameNumber + '&t=' + (new Date()).getTime();
-		}
+				Trafficr._cycleFrame();
+			}
+			else {
+				Trafficr._appendStatus('&lsaquo; ');
+			}
+		};
+		Trafficr.frames[frameIndex].onerror = Trafficr._frameError;
+		Trafficr.frames[frameIndex].src = 'frame.php?f=' + frameNumber + '&t=' + (new Date()).getTime();
 	},
 	
 	_frameError: function() {
@@ -109,7 +110,7 @@ var Trafficr = Trafficr || {
 					Trafficr._appendStatus('Could not load frame count from server');
 				}
 				else {
-					Trafficr._appendStatus(' ' + Trafficr.numFrames + ' total');
+					Trafficr._appendStatus(' ' + Trafficr.numFrames + ' total ');
 					if (callback != undefined) {
 						callback();
 					}
