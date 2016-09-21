@@ -24,6 +24,7 @@ var Trafficr = Trafficr || {
 	frames: new Array(),
 	loadedFrames: 0,
 	cycleIndex: 0,
+	frameStr: '',
 
 	loadFrames: function() {
 		if (Trafficr.statusDiv == null) {
@@ -58,7 +59,9 @@ var Trafficr = Trafficr || {
 		ctx.drawImage(Trafficr.frames[Trafficr.cycleIndex], 0, 0);
 		
 		Trafficr._clearStatus();
-		Trafficr._appendStatus('Frame ' + (Trafficr.cycleIndex + 1));
+		
+		var startIdx = Trafficr.numFrames - Trafficr.cycleIndex ;
+		Trafficr._appendStatus('[' + Trafficr.frameStr.substr(startIdx, Trafficr.numFrames) + '] ' + (Trafficr.cycleIndex + 1));
 
 		Trafficr.cycleIndex++;
 		if (Trafficr.cycleIndex >= Trafficr.numFrames) { Trafficr.cycleIndex = 0;}
@@ -67,7 +70,7 @@ var Trafficr = Trafficr || {
 	},
 	
 	_loadFrame: function(frameIndex) {
-		Trafficr._appendStatus('&rsaquo; ');
+		Trafficr._appendStatus('&rsaquo;');
 		var frameNumber = frameIndex + 1;
 		Trafficr.frames[frameIndex] = new Image();
 		Trafficr.frames[frameIndex].onload = function() {
@@ -82,7 +85,7 @@ var Trafficr = Trafficr || {
 				Trafficr._cycleFrame();
 			}
 			else {
-				Trafficr._appendStatus('&lsaquo; ');
+				Trafficr._appendStatus('&lsaquo;');
 			}
 		};
 		Trafficr.frames[frameIndex].onerror = Trafficr._frameError;
@@ -102,6 +105,12 @@ var Trafficr = Trafficr || {
 				if (xmlhttp.status == 200) {
 					if (!isNaN(xmlhttp.responseText)) {
 						Trafficr.numFrames = parseInt(xmlhttp.responseText);
+						
+						Trafficr.frameStr = '|';
+						for (i = 0; i < Trafficr.numFrames; i++) {
+							Trafficr.frameStr += '-';
+							Trafficr.frameStr = '-' + Trafficr.frameStr;
+						}
 					}
 				}
 				
