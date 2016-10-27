@@ -17,6 +17,7 @@
 var Trafficr = Trafficr || {
 
 	frameTimeout: 250,
+	newFrameTimeout: 30000,
 	
 	statusDiv: null,
 	frameCanvas: null,
@@ -25,6 +26,7 @@ var Trafficr = Trafficr || {
 	loadedFrames: 0,
 	cycleIndex: 0,
 	frameStr: '',
+	lastMTime: null,
 
 	loadFrames: function() {
 		if (Trafficr.statusDiv == null) {
@@ -83,6 +85,7 @@ var Trafficr = Trafficr || {
 				Trafficr.cycleIndex = 0;
 			
 				Trafficr._cycleFrame();
+				Trafficr._getLastMTime();
 			}
 			else {
 				Trafficr._appendStatus('&lsaquo;');
@@ -95,6 +98,42 @@ var Trafficr = Trafficr || {
 	_frameError: function() {
 		Trafficr._clearStatus();
 		Trafficr._appendStatus('Could not load all frames, webcam not ready');
+	},
+	
+	_getLastMTime: function() {
+		var xmlhttp = new XMLHttpRequest();
+
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+				if (xmlhttp.status == 200) {
+					if (!isNaN(xmlhttp.responseText)) {
+						var mtime = parseInt(xmlhttp.responseText);
+						if (Trafficr.lastMTime == null) {
+							Trafficr.lastMTime = mtime;
+						}
+						else if (mtime > Trafficr.lastMTime) {
+							Trafficr.lastMTime = mtime;
+							
+							var newFrame = new Image();
+							newFrame.onload = function() {
+								Trafficr._clearStatus();
+								Trafficr._appendStatus('New frame loaded');
+
+								// shift frames over
+								Trafficr.frames.push(newFrame);
+								Trafficr.frames.shift();
+							};
+							newFrame.src = 'frame.php?f=1&t=' + (new Date()).getTime();
+						}
+					}
+				}
+				
+				setTimeout(Trafficr._getLastMTime, Trafficr.newFrameTimeout);
+			}
+		};
+
+		xmlhttp.open('GET', 'frame.php?l=1', true);
+		xmlhttp.send();
 	},
 	
 	_getNumFrames: function(callback) {

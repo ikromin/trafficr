@@ -44,6 +44,14 @@ else if (isset($_GET['q'])) {
 	echo $totalFiles;
 	exit;
 }
+// Check if last modified date is requested
+else if (isset($_GET['l'])) {
+	$imgFile = $fileNameStub . '1' . $fileNameExt;
+	if (file_exists($imgFile)) {
+		echo filemtime($imgFile);
+	}
+	exit;
+}
 
 http_response_code(400);
 echo 'Invalid request';

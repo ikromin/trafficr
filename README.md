@@ -1,6 +1,8 @@
 # Trafficr
 
-A collections of scripts to set up your Traffic Cam easily and quickly.
+A collections of scripts to set up your time lapse web site quickly. Geared towards setting up traffic cams.
+
+![alt text](https://github.com/ikromin/trafficr/raw/master/ScreenShot20161027.png "ScreenShot20161027")
 
 ## Features
 
